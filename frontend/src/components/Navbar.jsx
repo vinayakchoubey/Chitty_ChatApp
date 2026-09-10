@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
+import { useLanguageStore } from "../store/useLanguageStore";
 import { LogOut, MessageSquare, Settings, User } from "lucide-react";
 import { motion } from "framer-motion";
 
 const Navbar = () => {
   const { logout, authUser } = useAuthStore();
+  const { t } = useLanguageStore();
 
   return (
     <header
@@ -29,7 +31,7 @@ const Navbar = () => {
                 className="btn btn-sm gap-2 transition-colors"
               >
                 <Settings className="w-4 h-4" />
-                <span className="hidden sm:inline">Settings</span>
+                <span className="hidden sm:inline">{t("settings")}</span>
               </motion.div>
             </Link>
 
@@ -41,7 +43,7 @@ const Navbar = () => {
                   className="btn btn-sm gap-2"
                 >
                   <User className="size-5" />
-                  <span className="hidden sm:inline">Profile</span>
+                  <span className="hidden sm:inline">{t("profile")}</span>
                 </motion.div>
               </Link>
             )}

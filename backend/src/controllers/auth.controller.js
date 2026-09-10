@@ -257,15 +257,13 @@ export const checkAuth = (req, res) => {
 };
 
 export const googleCallback = async (req, res) => {
+  const clientUrl = (process.env.CLIENT_URL ? process.env.CLIENT_URL.split(",")[0] : "http://localhost:5173").trim();
   try {
     generateToken(req.user._id, res);
-    // Explicitly fallback to production URL if in production
-    const clientUrl = process.env.CLIENT_URL || "https://chatting-application-flax.vercel.app";
     res.redirect(clientUrl);
   } catch (error) {
     console.log("Error in googleCallback", error.message);
-    const clientUrl = process.env.CLIENT_URL || "https://chatting-application-flax.vercel.app";
-    res.redirect(`${clientUrl}/login`);
+    res.redirect(`${clientUrl}/login?error=callback_failed`);
   }
 };
 

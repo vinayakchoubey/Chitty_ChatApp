@@ -1,13 +1,19 @@
 import { create } from "zustand";
 
+const getValidTheme = () => {
+  const saved = localStorage.getItem("chat-theme");
+  return saved === "light" ? "light" : "dark";
+};
+
 export const useThemeStore = create((set) => ({
-  theme: localStorage.getItem("chat-theme") || "coffee",
+  theme: getValidTheme(),
   setTheme: (theme) => {
-    localStorage.setItem("chat-theme", theme);
-    document.documentElement.setAttribute("data-theme", theme); // Apply theme globally
-    set({ theme });
+    const validTheme = theme === "light" ? "light" : "dark";
+    localStorage.setItem("chat-theme", validTheme);
+    document.documentElement.setAttribute("data-theme", validTheme); // Apply theme globally
+    set({ theme: validTheme });
   },
 }));
 
+document.documentElement.setAttribute("data-theme", getValidTheme());
 
-document.documentElement.setAttribute("data-theme", localStorage.getItem("chat-theme") || "coffee");

@@ -2,6 +2,7 @@ import express from "express";
 import { checkAuth, login, logout, signup, updateProfile, verifyEmail, sendOtp, verifyOtp, googleCallback, forgotPassword, resetPassword, changePassword } from "../controllers/auth.controller.js";
 import passport from "passport";
 import { protectRoute } from "../middleware/auth.middleware.js";
+import { generateToken } from "../lib/utils.js";
 
 const router = express.Router();
 
@@ -22,13 +23,27 @@ router.get("/google", passport.authenticate("google", { scope: ["profile", "emai
 
 router.get(
     "/google/callback",
-    passport.authenticate("google", { session: false, failureRedirect: `${process.env.CLIENT_URL || "https://chatting-application-flax.vercel.app"}/login` }),
+    (req, res, next) => {
+        passport.authenticate("google", { session: false }, (err, user, info) => {
+            const clientUrl = (process.env.CLIENT_URL ? process.env.CLIENT_URL.split(",")[0] : "http://localhost:5173").trim();
+            if (err || !user) {
+                console.error("Google OAuth error:", err?.message || info);
+                return res.redirect(`${clientUrl}/login?error=google_auth_failed`);
+            }
+            req.user = user;
+            next();
+        })(req, res, next);
+    },
     googleCallback
 );
 
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);
 router.put("/change-password", protectRoute, changePassword);
+
+// Routes
+export default router;
+
 
 
 export default router;
