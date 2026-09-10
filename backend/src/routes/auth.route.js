@@ -2,7 +2,6 @@ import express from "express";
 import { checkAuth, login, logout, signup, updateProfile, verifyEmail, sendOtp, verifyOtp, googleCallback, forgotPassword, resetPassword, changePassword } from "../controllers/auth.controller.js";
 import passport from "passport";
 import { protectRoute } from "../middleware/auth.middleware.js";
-import { generateToken } from "../lib/utils.js";
 
 const router = express.Router();
 
@@ -15,7 +14,6 @@ router.post("/send-otp", sendOtp);
 router.post("/verify-otp", verifyOtp);
 
 router.put("/update-profile", protectRoute, updateProfile);
-
 
 router.get("/check", protectRoute, checkAuth);
 
@@ -40,10 +38,5 @@ router.get(
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);
 router.put("/change-password", protectRoute, changePassword);
-
-// Routes
-export default router;
-
-
 
 export default router;
